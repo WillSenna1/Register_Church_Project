@@ -1,3 +1,5 @@
+"Criando DB"
+
 CREATE DATABASE launch_WS;
 
 USE  launch_WS;
@@ -9,7 +11,7 @@ CREATE TABLE member (
     birth INT NOT NULL,
     adress VARCHAR(200),
     phone VARCHAR(11),
-    baptims BOOLEAN,
+    baptims VARCHAR(11),
     CONSTRAINT birth_check CHECK (birth > 0)
 );
 
@@ -19,15 +21,15 @@ CREATE TABLE  event (
     title VARCHAR(100) NOT NULL
     );
 
-INSERT INTO event (title) VALUES 
-('Consagração'),
-('EBD'),
-('Culto da Família'),
-('Culto de Ensino'),
-('Tarde da bênção'),
-('Segunda de Primeira'),
-('Vigília'),
-('Ensaio')
+    INSERT INTO event (title) VALUES 
+    ('Consagração'),
+    ('EBD'),
+    ('Culto da Família'),
+    ('Culto de Ensino'),
+    ('Tarde da bênção'),
+    ('Segunda de Primeira'),
+    ('Vigília'),
+    ('Ensaio')
 
 
 CREATE TABLE presence (
