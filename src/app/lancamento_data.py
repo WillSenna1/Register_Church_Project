@@ -1,4 +1,5 @@
 import mysql.connector
+from datetime import datetime
 
 #ALTERAÇÃO A FAZER, 
 
@@ -43,13 +44,14 @@ def presence():
         else:
             insert_data = """
             INSERT INTO status (status)
-            VALUES(%s,%s)"""
+            VALUES(%s)"""
             data = (status)
             cursor.execute(insert_data, data)
             if insert_data is True:
                 print("\n Presença adicionada com sucesso!\n")
-    insert_data = """
-INSERT INTO presence ()"""
+                insert_data = """
+                INSERT INTO presence (status)
+                VALUES(%s);"""
         
 
         
@@ -60,24 +62,44 @@ INSERT INTO presence ()"""
 def cap_data():    
     name = input("Digite o nome: ")
     email = input("Digite o email: ")
-    birth  = int(input("Digite a idade: "))
-    adress =  input("Digite o endereço: ")
-    phone = int(input("Digite o telefone: "))
-    baptism =  str(input("Foi batizado? [S/N]")).upper()
-    tupla = ["S", "N"]
-    if baptism not in tupla:
+    while True:
+        birth_str = input("Digite a data de nascimento no formato DD/MM/AAAA: ")
+        try:
+            birth_datetime = datetime.datetime.strptime(birth_str, "%d/%m/%Y")
+            birth_mysql = datetime.datetime.strftime("%Y-%m-%d")
+            break
+        except ValueError:
+            print("Data inválida! Tente novamente no formato DD/MM/AAAA.")
+    adress = input("Digite o endereço: ")
+    while True:
+        try:
+            phone = int(input("Digite o telefone (apenas numeros): "))
+            break
+        except ValueError:
+            print("Valor inválido! Utilize somente números.")
+            return phone
+        except Exception as e:
+            print("Ocorreu um erro ao tentar capturar os dados.\nErro: ", str(e))
+            return phone
+    baptism = input("Foi batizado? [S/N]: ").upper()
+    if baptism not in ["S", "N"]:
         print("Opção Inválida! Utilize S ou N.")
-        return name
-    else:
+        return baptism
+    try:
         insert_data = """
         INSERT INTO member (name, email, birth, adress, 
-        phone, baptsm)
-        VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s);
+        phone, baptims)
+        VALUES(%s, %s, %s, %s, %s, %s);
         """
-        data = (name, email, birth, adress, phone, baptism)
+        data = (name, email, birth_str, adress, phone, baptism)
         cursor.execute(insert_data, data)
         print("\nDados inseridos com sucesso!\n")
-        
+    except mysql.connector.errors.ProgrammingError as e:
+        print("\nHouve um erro na gravação dos dados:\n", str(e))
+        return False
+    except Exception as e:
+        print(f"\nAlgo errado aconteceu:\n{str(e)}")
+        return False
 
 
 # Conectar ao banco de dados
