@@ -8,10 +8,10 @@ CREATE TABLE member (
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
     email VARCHAR(254) UNIQUE NOT NULL,
-    birth INT NOT NULL,
+    birth DATE NOT NULL,
     adress VARCHAR(200),
     phone VARCHAR(11),
-    baptims VARCHAR(11),
+    baptims VARCHAR(10) NOT NULL,
     CONSTRAINT birth_check CHECK (birth > 0)
 );
 
