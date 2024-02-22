@@ -9,7 +9,7 @@ from datetime import datetime
 def presence():
     member_id = int(input("Informe seu número de membro (ou digite 0 para cadastrar novo): "))
     if member_id != 0:
-        query = "SELECT COUNT(*) FROM members WHERE id = %s"
+        query = "SELECT * FROM member WHERE id = %s LIMIT 1"
         cursor.execute(query, (member_id,))
         result_member = cursor.fetchone()
         if result_member[0] == 0:
@@ -60,16 +60,23 @@ def presence():
 
 
 def cap_data():    
+    connect = mysql.connector.connect(
+    host="localhost",
+    user="root",
+    password="03092002",
+    database="launch_WS"
+    )
+    cursor = connect.cursor()
+
     name = input("Digite o nome: ")
     email = input("Digite o email: ")
     while True:
-        birth_str = input("Digite a data de nascimento no formato DD/MM/AAAA: ")
+        birth_str = input("Digite a data de nascimento no formato AAAA/MM/DD: ")
         try:
-            birth_datetime = datetime.datetime.strptime(birth_str, "%d/%m/%Y")
-            birth_mysql = datetime.datetime.strftime("%Y-%m-%d")
+            birth_datetime = datetime.strptime(birth_str, "%Y-%m-%d")
             break
         except ValueError:
-            print("Data inválida! Tente novamente no formato DD/MM/AAAA.")
+            print("Data inválida! Tente novamente no formato AAAA/MM/DD.")
     adress = input("Digite o endereço: ")
     while True:
         try:
@@ -80,7 +87,7 @@ def cap_data():
             return phone
         except Exception as e:
             print("Ocorreu um erro ao tentar capturar os dados.\nErro: ", str(e))
-            return phone
+        return phone
     baptism = input("Foi batizado? [S/N]: ").upper()
     if baptism not in ["S", "N"]:
         print("Opção Inválida! Utilize S ou N.")
@@ -91,9 +98,11 @@ def cap_data():
         phone, baptims)
         VALUES(%s, %s, %s, %s, %s, %s);
         """
-        data = (name, email, birth_str, adress, phone, baptism)
+        data = (name, email, birth_datetime, adress, phone, baptism)
         cursor.execute(insert_data, data)
         print("\nDados inseridos com sucesso!\n")
+        connect.commit()
+
     except mysql.connector.errors.ProgrammingError as e:
         print("\nHouve um erro na gravação dos dados:\n", str(e))
         return False
@@ -120,6 +129,7 @@ cursor = connect.cursor()
 connect.commit()
 
 #******************** TESTE  ******************** */
+
 presence()
 
 #******************** TESTE  ******************** */
