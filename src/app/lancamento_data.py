@@ -5,53 +5,54 @@ from datetime import datetime
 
 #Criando funções
 
-#IDENTIFICAÇÃO: Chamar o ID do membro para receber todas as informações dele
+#************************************************************************************************
+# Função para decidir se fará consulta, ou cadastro.
 def presence():
     member_id = int(input("Informe seu número de membro (ou digite 0 para cadastrar novo): "))
     if member_id != 0:
-        query = "SELECT * FROM member WHERE id = %s LIMIT 1"
-        cursor.execute(query, (member_id,))
+        cursor.execute("SELECT * FROM member WHERE id = %s", (member_id,))
         result_member = cursor.fetchone()
-        if result_member[0] == 0:
+        if result_member is None:
             print(f"O número de membro {member_id} não foi encontrado!")
             return member_id
         else:
-            pass
+            print('Detalhes...')
+            print(f'\n Nome:', result_member[1], '\n ID:', result_member[0], '\n Email:', result_member[2], '\n Data de Nascimento:', result_member[3], '\n Endereco:', result_member[4], '\n Telefone:', result_member[5])
     else:
         cap_data()
         return
 
 
-    def event():
-        event_id = int(input("Digite o código do evento: "))
-        if event_id != 0:
-            query = 'SELECT COUNT(*) FROM event WHERE id = %s'
-            cursor.execute(query, (event_id,))
-            result_event = cursor.fetchone()
-            if result_event[0] == 0:
-                print('Código de evento inexistente!')
-                return event_id
-            else:
-                pass
-
-
-    def stats():        
-        status = input("Confirme presença ou falta (Use apenas P ou F respectivamente: ")
-        status_option = ["P", "F"]
-        if status.upper() not in status_option:
-            print("Opção inválida! Use apenas P ou F.")
-            return status
+def event():
+    event_id = int(input("Digite o código do evento: "))
+    if event_id != 0:
+        query = 'SELECT COUNT(*) FROM event WHERE id = %s'
+        cursor.execute(query, (event_id,))
+        result_event = cursor.fetchone()
+        if result_event[0] == 0:
+            print('Código de evento inexistente!')
+            return event_id
         else:
+            pass
+
+
+def stats():        
+    status = input("Confirme presença ou falta (Use apenas P ou F respectivamente: ")
+    status_option = ["P", "F"]
+    if status.upper() not in status_option:
+        print("Opção inválida! Use apenas P ou F.")
+        return status
+    else:
+        insert_data = """
+        INSERT INTO status (status)
+        VALUES(%s)"""
+        data = (status)
+        cursor.execute(insert_data, data)
+        if insert_data is True:
+            print("\n Presença adicionada com sucesso!\n")
             insert_data = """
-            INSERT INTO status (status)
-            VALUES(%s)"""
-            data = (status)
-            cursor.execute(insert_data, data)
-            if insert_data is True:
-                print("\n Presença adicionada com sucesso!\n")
-                insert_data = """
-                INSERT INTO presence (status)
-                VALUES(%s);"""
+            INSERT INTO presence (status)
+            VALUES(%s);"""
         
 
         
@@ -133,13 +134,6 @@ connect.commit()
 presence()
 
 #******************** TESTE  ******************** */
-
-#Consulta de dados
-Consulta = "SELECT * FROM member"
-cursor.execute(Consulta)
-
-for linha in cursor.fetchall():
-    print(linha)
 
 #Fechar conexão
 cursor.close()
