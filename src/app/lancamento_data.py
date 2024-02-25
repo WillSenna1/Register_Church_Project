@@ -8,7 +8,7 @@ from datetime import datetime
 #************************************************************************************************
 # Função para decidir se fará consulta, ou cadastro.
 def presence():
-    member_id = int(input("Informe seu número de membro (ou digite 0 para cadastrar novo): "))
+    member_id = int(input("Informe seu número de membro: "))
     if member_id != 0:
         cursor.execute("SELECT * FROM member WHERE id = %s", (member_id,))
         result_member = cursor.fetchone()
@@ -122,7 +122,7 @@ connect = mysql.connector.connect(
 
 # Verificar  se a conexão foi realizada com sucesso
 if  connect.is_connected():
-    print("Conectado")
+    print("Conectado \n")
 
 #  Criar um cursor para executar as querys SQL
 cursor = connect.cursor()
@@ -130,8 +130,21 @@ cursor = connect.cursor()
 connect.commit()
 
 #******************** TESTE  ******************** */
-
-presence()
+print("""Escolha uma opção\n 
+Digite 1 para ir à seção de eventos \n 
+Digite 2 para ir à seção de membros \n
+Digite 0 para encerrar""")
+chose1 = int(input(""))
+while chose1 in [1, 2, 0]:
+    if chose1 == 1:
+        event()
+    elif chose1 == 2:
+        presence()
+    elif chose1 == 0:
+        print("Encerrando...")
+    else:
+        print("Opção Inválida! Tente novamente.")
+        
 
 #******************** TESTE  ******************** */
 
