@@ -20,26 +20,25 @@ Digite 0 para encerrar\n""")
             elif chose1 == 2:
                 presence()
             elif chose1 == 0:
-                print("Encerrando...")
+                print("Encerrando...\n")
                 break
                 return 
             else:
-                print("Opção Inválida! Tente novamente.")
+                print("Opção Inválida! Tente novamente.\n")
 
 
 #************************************************************************************************
 # Função para decidir se fará consulta, ou cadastro.
 def presence():
-    member_id = input("Informe seu número de membro, ou digite 0 para cadastrar um membro, ou pressione a tecla 'esc' para voltar ao menu principal")# Adicionar ou digite "algo",
-        #para voltar ao menu anterior, fazder com event também
+    member_id = input("Informe seu número de membro, ou digite 0 para cadastrar um membro, ou digite -1 para voltar ao menu principal\n")
     try:
         print()
     except ValueError(member_id) as e:
         print(e)
-        print('\n Voltando ao menu principal...')
+        print('\n Voltando ao menu principal...\n')
         chose()
     except TypeError(member_id):
-        print("Retornando ao menu principal...")
+        print("Retornando ao menu principal...\n")
         chose()
     except UnboundLocalError(member_id) as e:
         print("Erro", str(e))
@@ -52,7 +51,7 @@ def presence():
             cursor.execute("SELECT * FROM member WHERE id = %s", (member_id,))
             result_member = cursor.fetchone()
             if result_member is None:
-                print(f"O número de membro {member_id} não foi encontrado!")
+                print(f"O número de membro {member_id} não foi encontrado!\n")
                 return member_id
             else:
                 print('Detalhes...')
@@ -60,8 +59,8 @@ def presence():
         except Exception as e:
             print(" Erro na busca por dados do membro!\n", str(e), '\n')
             return
-    elif member_id == 'esc':  # Se apertar esc sai o programa
-        print("\n Voltando ao menu principal...")
+    elif member_id == -1:
+        print("\n Voltando ao menu principal...\n")
         chose()
 
 
