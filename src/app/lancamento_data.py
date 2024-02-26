@@ -1,26 +1,68 @@
 import mysql.connector
 from datetime import datetime
+import keyboard
 
 #ALTERAÇÃO A FAZER, 
 
 #Criando funções
 
+
+def chose():
+    while True:
+        print("""Escolha uma opção\n 
+Digite 1 para ir à seção de eventos \n 
+Digite 2 para ir à seção de membros \n
+Digite 0 para encerrar\n""")
+        chose1 = int(input(""))
+        while chose1 in [1, 2, 0]:
+            if chose1 == 1:
+                event()
+            elif chose1 == 2:
+                presence()
+            elif chose1 == 0:
+                print("Encerrando...")
+                break
+                return 
+            else:
+                print("Opção Inválida! Tente novamente.")
+
+
 #************************************************************************************************
 # Função para decidir se fará consulta, ou cadastro.
 def presence():
-    member_id = int(input("Informe seu número de membro: "))
-    if member_id != 0:
-        cursor.execute("SELECT * FROM member WHERE id = %s", (member_id,))
-        result_member = cursor.fetchone()
-        if result_member is None:
-            print(f"O número de membro {member_id} não foi encontrado!")
-            return member_id
-        else:
-            print('Detalhes...')
-            print(f'\n Nome:', result_member[1], '\n ID:', result_member[0], '\n Email:', result_member[2], '\n Data de Nascimento:', result_member[3], '\n Endereco:', result_member[4], '\n Telefone:', result_member[5])
-    else:
+    member_id = input("Informe seu número de membro, ou digite 0 para cadastrar um membro, ou pressione a tecla 'esc' para voltar ao menu principal")# Adicionar ou digite "algo",
+        #para voltar ao menu anterior, fazder com event também
+    try:
+        print()
+    except ValueError(member_id) as e:
+        print(e)
+        print('\n Voltando ao menu principal...')
+        chose()
+    except TypeError(member_id):
+        print("Retornando ao menu principal...")
+        chose()
+    except UnboundLocalError(member_id) as e:
+        print("Erro", str(e))
+    member_id = int(member_id)
+    if member_id == 0:
         cap_data()
         return
+    elif member_id > 0:  
+        try:
+            cursor.execute("SELECT * FROM member WHERE id = %s", (member_id,))
+            result_member = cursor.fetchone()
+            if result_member is None:
+                print(f"O número de membro {member_id} não foi encontrado!")
+                return member_id
+            else:
+                print('Detalhes...')
+                print(f'\n Nome:', result_member[1], '\n ID:', result_member[0], '\n Email:', result_member[2], '\n Data de Nascimento:', result_member[3], '\n Endereco:', result_member[4], '\n Telefone:', result_member[5])
+        except Exception as e:
+            print(" Erro na busca por dados do membro!\n", str(e), '\n')
+            return
+    elif member_id == 'esc':  # Se apertar esc sai o programa
+        print("\n Voltando ao menu principal...")
+        chose()
 
 
 def event():
@@ -130,21 +172,8 @@ cursor = connect.cursor()
 connect.commit()
 
 #******************** TESTE  ******************** */
-print("""Escolha uma opção\n 
-Digite 1 para ir à seção de eventos \n 
-Digite 2 para ir à seção de membros \n
-Digite 0 para encerrar""")
-chose1 = int(input(""))
-while chose1 in [1, 2, 0]:
-    if chose1 == 1:
-        event()
-    elif chose1 == 2:
-        presence()
-    elif chose1 == 0:
-        print("Encerrando...")
-    else:
-        print("Opção Inválida! Tente novamente.")
-        
+
+chose()
 
 #******************** TESTE  ******************** */
 
