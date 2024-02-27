@@ -1,13 +1,15 @@
+# Projeto ainda em desenvolvimento (Algumas funções podem ou não apresentar erros)
+# Atualizações semanais. 
+
 import mysql.connector
 from datetime import datetime
-import keyboard
-
-#ALTERAÇÃO A FAZER, 
 
 #Criando funções
 
+#Função iniciar programa
 
-def chose():
+
+def choice():
     while True:
         print("""Escolha uma opção\n 
 Digite 1 para ir à seção de eventos \n 
@@ -29,6 +31,8 @@ Digite 0 para encerrar\n""")
 
 #************************************************************************************************
 # Função para decidir se fará consulta, ou cadastro.
+
+
 def presence():
     member_id = input("Informe seu número de membro, ou digite 0 para cadastrar um membro, ou digite -1 para voltar ao menu principal\n")
     try:
@@ -36,10 +40,10 @@ def presence():
     except ValueError(member_id) as e:
         print(e)
         print('\n Voltando ao menu principal...\n')
-        chose()
+        choice()
     except TypeError(member_id):
         print("Retornando ao menu principal...\n")
-        chose()
+        choice()
     except UnboundLocalError(member_id) as e:
         print("Erro", str(e))
     member_id = int(member_id)
@@ -61,7 +65,7 @@ def presence():
             return
     elif member_id == -1:
         print("\n Voltando ao menu principal...\n")
-        chose()
+        choice()
 
 
 def event():
@@ -94,8 +98,6 @@ def stats():
             insert_data = """
             INSERT INTO presence (status)
             VALUES(%s);"""
-        
-
         
 
 # Captura de dados dos membros
@@ -172,7 +174,7 @@ connect.commit()
 
 #******************** TESTE  ******************** */
 
-chose()
+choice()
 
 #******************** TESTE  ******************** */
 
