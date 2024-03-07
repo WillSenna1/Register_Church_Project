@@ -1,3 +1,5 @@
+# Base de testes para testar novas formas de realizar o projeto
+
 import mysql.connector
 from datetime import datetime
 

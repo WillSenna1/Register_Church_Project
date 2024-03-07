@@ -1,8 +1,9 @@
-#RESET DATABASE
+# Base de teste para tesstar novas funções
 
 import mysql.connector
 import keyboard
 import datetime
+
 connect = mysql.connector.connect(
     host="localhost",
     user="root",
