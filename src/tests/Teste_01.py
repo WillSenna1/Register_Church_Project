@@ -1,4 +1,4 @@
-# Base de teste para tesstar novas funções
+# Base de teste para testar novas funções
 
 import mysql.connector
 import keyboard
