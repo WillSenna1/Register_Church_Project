@@ -1,5 +1,5 @@
 # Projeto ainda em desenvolvimento (Algumas funções podem ou não apresentar erros)
-# Atualizações semanais. 
+# Atualizações semanais.
 
 import mysql.connector
 from datetime import datetime
