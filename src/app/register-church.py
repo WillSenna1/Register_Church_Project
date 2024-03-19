@@ -3,14 +3,15 @@
 
 import mysql.connector
 from datetime import datetime
+import time
 
 class Database:
     def __init__(self, host="localhost", user="root", password="03092002", database="launch_WS"):
         self.connect = mysql.connector.connect(
-            host=host,
-            user=user,
-            password=password,
-            database=database
+            host="localhost",
+            user="root",
+            password="03092002",
+            database="launch_WS"
         )
         self.cursor = self.connect.cursor()
 
@@ -53,24 +54,36 @@ class Event:
     def __init__(self, db):
         self.db = db
 
-    def check_event(self, event_id):
-        query = 'SELECT COUNT(*) FROM event WHERE event_id = %s'
-        self.db.cursor.execute(query, (event_id,))
-        result_event = self.db.cursor.fetchone()
-        if result_event[0] == 0:
-            print('Código de evento inexistente!')
-            return False
-        else:
-            return True
 
     def find_event_by_id(self, event_id):
         query = 'SELECT * FROM event WHERE event_id = %s'
         self.db.cursor.execute(query, (event_id,))
         result = self.db.cursor.fetchone()
-        if result:
-            print(f"Evento encontrado: {result[1]} - ID: {result[0]}")
+        if result[0] == 0:
+            print('Código de evento inexistente!')
+            return False
         else:
-            print("Evento não encontrado.")
+            if result:
+                print(f"Evento encontrado: {result[1]} - ID: {result[0]}")
+            else:
+                print("Evento não encontrado.")
+
+    def  insert_new_event(self, title, description, date, place):
+        date = datetime.strptime(date, '%Y-%m-%d')
+        try:
+            instert_date = '''INSERT INTO event (title, description, date, place) VALUES(%s, %s, %s, %s)'''
+            self.db.cursor.execute(instert_date, (title, description, date, place), "Novo evento criado com sucesso!")
+            self.db.connect.commit()
+            print("\n Evento inserido com sucesso!\n")
+        except Exception as e:
+            print("\nErro ao inserir novo evento no banco de dados!\n", str(e))
+
+    def show_events(self):
+        query = 'SELECT * FROM event'
+        self.db.cursor.execute(query)
+        result = self.db.cursor.fetchone()
+        print(result)
+        
 
 class Presence:
     def __init__(self, db):
@@ -103,6 +116,7 @@ if db.connect.is_connected():
 # Função para interagir com o usuário
 def interact_with_user(db):
     while True:
+        time.sleep(2.5) # Aguarda 1,5 segundos
         print("""Escolha uma opção\n 
 Digite 1 para ir à seção de eventos \n 
 Digite 2 para ir à seção de membros \n
@@ -112,12 +126,20 @@ Digite 0 para encerrar\n""")
         choice = int(input(""))
         
         if choice == 1:
-            event_id = int(input("Digite o código do evento: "))
+            event_id = int(input(""" Digite 1 para consultar evento\n Digite 2 para criar novo evento\n Digite 3 para ver todos os eventos:\n"""))
             event = Event(db)
-            if event.check_event(event_id):
-                print("Evento encontrado.")
-            else:
-                print("Evento não encontrado.")
+            if event_id == 1:
+                find_event = int(input("Digite o id do evento: "))
+                event = Event(db)
+                event.find_event_by_id(find_event)
+            elif event_id == 2:
+                name = input("Nome do evento: ")
+                description = input("Descrição do evento: ")
+                date = input("Data do evento: ")
+                place = input("Local do evento: ")
+                event.insert_new_event(name, description, date, place) 
+            elif event_id == 3:
+                event.show_events()
         elif choice == 2:
             member = Member(db)
             name = input("Digite o nome: ")
@@ -143,7 +165,7 @@ Digite 0 para encerrar\n""")
             elif sub_choice == 2:
                 name = input("Digite o nome do membro: ")
                 member = Member(db)
-                member.find_member_by_name(name)
+                member.find_member_by_name(name) #TODO: Implement this method
             elif sub_choice == 3:
                 event_id = int(input("Digite o ID do evento: "))
                 event = Event(db)

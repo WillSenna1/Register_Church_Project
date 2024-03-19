@@ -19,6 +19,9 @@ CREATE TABLE member (
 CREATE TABLE  event (
     event_id INT AUTO_INCREMENT PRIMARY KEY,
     title VARCHAR(100) NOT NULL
+    description VARCHAR(300),
+    date  DATE NOT NULL,
+    place VARCHAR(100)
     );
 
     INSERT INTO event (title) VALUES 
