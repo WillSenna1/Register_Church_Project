@@ -1,6 +1,10 @@
 # Projeto ainda em desenvolvimento (Algumas funções podem ou não apresentar erros)
 # Atualizações semanais.
 
+# Project still under development (Some functions may or may not present errors)
+# Weekly updates.
+
+
 import mysql.connector
 from datetime import datetime
 import time
