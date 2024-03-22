@@ -5,15 +5,23 @@ import mysql.connector
 from datetime import datetime
 import time
 
+import mysql.connector
+
 class Database:
-    def __init__(self, host="localhost", user="root", password="03092002", database="launch_WS"):
+    def __init__(self, host="localhost", user="root", password="03092002", database="launch_WS", port=3306, ssl_disabled=True):
         self.connect = mysql.connector.connect(
             host="localhost",
             user="root",
             password="03092002",
-            database="launch_WS"
+            database="launch_WS",
+            port="3306",
+            ssl_disabled=False
         )
         self.cursor = self.connect.cursor()
+
+    def close(self):
+        self.cursor.close()
+        self.connect.close()
 
     def close(self):
         self.cursor.close()
@@ -68,21 +76,27 @@ class Event:
             else:
                 print("Evento não encontrado.")
 
-    def  insert_new_event(self, title, description, date, place):
+    def insert_new_event(self, title, description, date, place):
         date = datetime.strptime(date, '%Y-%m-%d')
         try:
-            instert_date = '''INSERT INTO event (title, description, date, place) VALUES(%s, %s, %s, %s)'''
-            self.db.cursor.execute(instert_date, (title, description, date, place), "Novo evento criado com sucesso!")
+            insert_date = '''INSERT INTO event (title, description, date, place) VALUES(%s, %s, %s, %s)'''
+            self.db.cursor.execute(insert_date, (title, description, date, place))
             self.db.connect.commit()
-            print("\n Evento inserido com sucesso!\n")
+            print("\nEvento inserido com sucesso!\n")
         except Exception as e:
             print("\nErro ao inserir novo evento no banco de dados!\n", str(e))
+            return False
+
 
     def show_events(self):
         query = 'SELECT * FROM event'
         self.db.cursor.execute(query)
-        result = self.db.cursor.fetchone()
-        print(result)
+        result = self.db.cursor.fetchall()
+        x = 0
+        while x <  len(result):
+            for r in result :
+                print(f'\n ID do evento: {r[0]} \n Título: {r[1]} \n Data: {r[3]} \n Local: {r[4]}')
+                x += 1
         
 
 class Presence:
@@ -117,7 +131,7 @@ if db.connect.is_connected():
 def interact_with_user(db):
     while True:
         time.sleep(2.5) # Aguarda 1,5 segundos
-        print("""Escolha uma opção\n 
+        print("""\nEscolha uma opção\n 
 Digite 1 para ir à seção de eventos \n 
 Digite 2 para ir à seção de membros \n
 Digite 3 para adicionar presença \n

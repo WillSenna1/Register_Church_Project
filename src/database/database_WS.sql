@@ -24,6 +24,8 @@ CREATE TABLE  event (
     place VARCHAR(100)
     );
 
+    ALTER TABLE event ADD COLUMN description VARCHAR(500);
+
     INSERT INTO event (title) VALUES 
     ('Consagração'),
     ('EBD'),
